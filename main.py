@@ -114,25 +114,44 @@ class Battle(object):
             mp_blocks_d = int(40.0 * mp_prc_d)
 
             a_message = ""
+
             for i in xrange(hp_blocks_a):
                 a_message += colored("#", "red")
+            
             a_message += "\n"
+            
             for i in xrange(mp_blocks_a):
                 a_message += colored("#", "blue")
-            a_message += colored("\n%s has %s HP, %s MP, " % (self.attacker.name, self.attacker.hp, self.attacker.mp), "yellow")
+            
+            a_message += colored("\n%s has %s HP, %s MP, " % 
+                         (self.attacker.name, self.attacker.hp, self.attacker.mp),
+                         "yellow")
+            
             for effect in self.attacker.effects:
-                a_message += colored("%s is active (%s turn remaining), " % (effect, self.attacker.effects[effect]), "yellow") 
+                a_message += colored("%s is active (%s turn remaining), " % 
+                             (effect, self.attacker.effects[effect]), "yellow") 
+            
             a_message += "\n"
 
             d_message = ""
+            
             for i in xrange(hp_blocks_d):
                 d_message += colored("#", "red")
+            
             d_message += "\n"
+            
             for i in xrange(mp_blocks_d):
                 d_message += colored("#", "blue")
-            d_message += colored("\n%s has %s HP, %s MP, " % (self.defender.name, self.defender.hp, self.defender.mp), "yellow")
+            
+            d_message += colored("\n%s has %s HP, %s MP, " % 
+                                 (self.defender.name, 
+                                 self.defender.hp, 
+                                 self.defender.mp), "yellow")
+
             for effect in self.defender.effects:
-                d_message += colored("%s is active (%s turn remaining), " % (effect, self.defender.effects[effect]), "yellow") 
+                d_message += colored("%s is active (%s turn remaining), " % 
+                                     (effect, 
+                                      self.defender.effects[effect]), "yellow") 
             d_message += "\n"
 
             if self.attacker.name == "wizard":
@@ -186,11 +205,21 @@ class Battle(object):
                      "Recharge" : 229}
 
         description = {"Attack" : "Normal physical attack",
-                       "Magic Missile" : "Magic Missile costs 53 mana. It instantly does 4 damage",
-                       "Drain" : "Drain costs 73 mana. It instantly does 2 damage and heals you for 2 hit points.",
-                       "Shield" : "Shield costs 113 mana. It starts an effect that lasts for 6 turns. While it is active, your armor is increased by 7.",
-                       "Poison" : "Poison costs 173 mana. It starts an effect that lasts for 6 turns. At the start of each turn while it is active, it deals the boss 3 damage.",
-                       "Recharge" : "Recharge costs 229 mana. It starts an effect that lasts for 5 turns. At the start of each turn while it is active, it gives you 101 new mana."}
+                       "Magic Missile" : "Magic Missile costs 53 mana. It"+ 
+                                         "instantly does 4 damage",
+                       "Drain" : "Drain costs 73 mana. It instantly does 2"+ 
+                                 " damage and heals you for 2 hit points.",
+                       "Shield" : "Shield costs 113 mana. It starts an effect"+
+                                  " that lasts for 6 turns. While it is active"+
+                                  ", your armor is increased by 7.",
+                       "Poison" : "Poison costs 173 mana. It starts an effect"+
+                                  " that lasts for 6 turns. At the start of "+
+                                  "each turn while it is active, it deals the"+
+                                  " boss 3 damage.",
+                       "Recharge" : "Recharge costs 229 mana. It starts an "+
+                                    "effect that lasts for 5 turns. At the"+
+                                    " start of each turn while it is active,"+
+                                    " it gives you 101 new mana."}
 
         # See what abilities are avaiable
         message = "Choose ability:\n"
@@ -216,16 +245,28 @@ class Battle(object):
         mp = self.attacker.mp 
         avail = []
         for ability in self.attacker.abilities:
+            
             if ability == "Magic Missile" and mp >= 53:
                 avail.append(ability)
+            
             if ability == "Drain" and mp >= 73:
                 avail.append(ability)
-            if ability == "Shield" and mp >= 113 and "Shield" not in self.attacker.effects.keys():
+            
+            if ability == "Shield" and \
+            mp >= 113 and \
+            "Shield" not in self.attacker.effects.keys():
                 avail.append(ability)
-            if ability == "Poison" and mp >= 173 and "Poison" not in self.defender.effects.keys():
+            
+            if ability == "Poison" and \
+            mp >= 173 and \
+            "Poison" not in self.defender.effects.keys():
                 avail.append(ability)
-            if ability == "Recharge" and mp >= 229 and "Recharge" not in self.attacker.effects.keys():
+            
+            if ability == "Recharge" and \
+            mp >= 229 \
+            and "Recharge" not in self.attacker.effects.keys():
                 avail.append(ability)
+            
             if ability == "Attack":
                 avail.append(ability)
 
@@ -234,7 +275,8 @@ class Battle(object):
     def check_mana(self):
         if self.attacker.mp < 53 and "Attack" not in self.attacker.abilities:
             self.status = False
-            self.outcome = colored("%s is out of options (no mana?)" % self.attacker.name, "yellow")
+            self.outcome = colored("%s is out of options (no mana?)" % 
+                                   self.attacker.name, "yellow")
         return self
 
     def check_health(self):
@@ -242,6 +284,7 @@ class Battle(object):
         if self.attacker.hp <= 0:
             self.status = False
             self.outcome = "%s had died, %s has won!" % (self.attacker.name, self.defender.name)
+        
         if self.defender.hp <= 0:
             self.status = False
             self.outcome = "%s has died, %s has won!" % (self.defender.name, self.attacker.name)
@@ -253,25 +296,31 @@ class Battle(object):
 
         # ATTACKER
         if "Poison" in self.attacker.effects.keys():
+            
             if self.slow_text:
-                print colored("Poison does 3 damage to %s\n" % (self.attacker.name), "green")
+                print colored("Poison does 3 damage to %s\n" % 
+                              (self.attacker.name), "green")
                 wait()
             self.attacker.hp -= 3
+            
             if self.attacker.effects["Poison"] == 1:
                 del self.attacker.effects["Poison"]
-                print colored("Poison has worn off on %s\n" % (self.attacker.name), "green")
+                print colored("Poison has worn off on %s\n" % 
+                              (self.attacker.name), "green")
                 wait()
             else:
                 self.attacker.effects["Poison"] -= 1
 
         if "Recharge" in self.attacker.effects.keys():
             if self.slow_text:
-                print colored("%s gains 101 mana through recharge\n" % (self.attacker.name), "blue")
+                print colored("%s gains 101 mana through recharge\n" % 
+                              (self.attacker.name), "blue")
                 wait()
             self.attacker.mp += 101
             if self.attacker.effects["Recharge"] == 1:
                 del self.attacker.effects["Recharge"]
-                print colored("Recharge has worn off on %s\n" % (self.attacker.name), "blue")
+                print colored("Recharge has worn off on %s\n" % 
+                              (self.attacker.name), "blue")
                 wait()
             else:
                 self.attacker.effects["Recharge"] -= 1
@@ -279,24 +328,28 @@ class Battle(object):
         # DEFENDER
         if "Poison" in self.defender.effects.keys():
             if self.slow_text:
-                print colored("Poison does 3 damage to %s\n" % (self.defender.name), "green")
+                print colored("Poison does 3 damage to %s\n" % 
+                              (self.defender.name), "green")
                 wait()
             self.defender.hp -= 3
             if self.defender.effects["Poison"] == 1:
                 del self.defender.effects["Poison"]
-                print colored("Poison has worn off on %s\n" % (self.defender.name), "green")
+                print colored("Poison has worn off on %s\n" % 
+                              (self.defender.name), "green")
                 wait()
             else:
                 self.defender.effects["Poison"] -= 1
 
         if "Recharge" in self.defender.effects.keys():
             if self.slow_text:
-                print colored("%s gains 101 mana through recharge\n" % (self.defender.name), "blue")
+                print colored("%s gains 101 mana through recharge\n" % 
+                              (self.defender.name), "blue")
                 wait()
             self.defender.mp += 101
             if self.defender.effects["Recharge"] == 1:
                 del self.defender.effects["Recharge"]
-                print colored("Recharge has worn off on %s\n" % (self.defender.name), "blue")
+                print colored("Recharge has worn off on %s\n" % 
+                              (self.defender.name), "blue")
                 wait()
             else:
                 self.defender.effects["Recharge"] -= 1
@@ -311,7 +364,8 @@ class Battle(object):
             if self.attacker.effects["Shield"] == 1:
                 del self.attacker.effects["Shield"]
                 if self.slow_text:
-                    print colored("Shield has worn off on %s\n" % (self.attacker.name), "cyan")
+                    print colored("Shield has worn off on %s\n" % 
+                                  (self.attacker.name), "cyan")
                     wait()
                 self.defender.armor -= 7
             else:
@@ -322,7 +376,8 @@ class Battle(object):
             if self.defender.effects["Shield"] == 1:
                 del self.defender.effects["Shield"]
                 if self.slow_text:
-                    print colored("Shield has worn off on %s\n" % (self.defender.name), "cyan")
+                    print colored("Shield has worn off on %s\n" % 
+                                  (self.defender.name), "cyan")
                     wait()
                 self.defender.armor -= 7
             else:
@@ -338,7 +393,8 @@ class Battle(object):
             message = colored("%s attacks %s for %s damage" % \
               (self.attacker.name, self.defender.name, dmg), "red")
             if "Shield" in self.defender.effects.keys(): 
-                message += colored(" (%s blocked by Shield)" % self.defender.armor, "cyan")
+                message += colored(" (%s blocked by Shield)" % 
+                                   self.defender.armor, "cyan")
             message += "\n"
             print message
             wait()
@@ -374,7 +430,8 @@ class Battle(object):
     def shield(self):
         ''' Attacker applies "shield" for 6 turns '''
         if self.slow_text:
-            print colored("%s activates shield for 6 turns\n" % self.attacker.name, "cyan") 
+            print colored("%s activates shield for 6 turns\n" % 
+                          self.attacker.name, "cyan") 
             wait()
         self.attacker.mp -= 113
         self.attacker.effects["Shield"] = 6
@@ -387,7 +444,7 @@ class Battle(object):
         ''' Attacker applies poison to defender '''
         if self.slow_text:
             print colored("%s poisons %s for 6 turns\n" % \
-              (self.attacker.name, self.defender.name), "green") 
+                          (self.attacker.name, self.defender.name), "green") 
             wait()
 
         self.attacker.mp -= 173
@@ -399,7 +456,8 @@ class Battle(object):
     def recharge(self):
         ''' Attacker begins recharge effect '''
         if self.slow_text:
-            print colored("%s activates recharge for 5 turns\n" % self.attacker.name, "blue") 
+            print colored("%s activates recharge for 5 turns\n" % 
+                          self.attacker.name, "blue") 
             wait()
         self.attacker.mp -= 229
         self.attacker.effects["Recharge"] = 5
